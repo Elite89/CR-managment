@@ -1,29 +1,7 @@
--- Contract Table
-Drop TABLE IF EXISTS Contracts;
-CREATE TABLE Contracts (
-    SowID VARCHAR(50) NOT NULL PRIMARY KEY,
-    SowName VARCHAR(100) NOT NULL, 
-    ProjectType VARCHAR(50) NOT NULL, 
-    StartDate DATE NOT NULL,
-    EndDate DATE NOT NULL,
-    CssCMS VARCHAR(50),
-    ContractID VARCHAR(50),
-    ContractValue DECIMAL,
-    CrmStage VARCHAR(30),
-    CrmID VARCHAR(30),
-    TcsOwner VARCHAR(30),
-    BscOwner VARCHAR(30),
-    SowSS VARCHAR(30),
-    PoNumber NUMBER,
-    PoValue DECIMAL,
-    Remarks VARCHAR(400),
-    FOREIGN KEY(TcsOwner) REFERENCES Employee(FullName),
-    FOREIGN KEY(BscOwner) REFERENCES Employee(FullName)
-);
-
-DROP TABLE IF EXISTS Employee;
+-- DROP TABLE IF EXISTS Employee;
+DROP TABLE Employee CASCADE;
 CREATE TABLE Employee(
-    EmployeeID NUMBER NOT NULL PRIMARY KEY,
+    EmployeeID INT UNIQUE PRIMARY KEY,
     FullName VARCHAR(100) NOT NULL,
     DeputeBranch VARCHAR(50),
     EmployeeDP VARCHAR(50),
@@ -42,12 +20,34 @@ CREATE TABLE Employee(
     ManagementPerson INT DEFAULT 0
 );
 
+-- Contract Table
+Drop TABLE IF EXISTS Contracts;
+CREATE TABLE Contracts (
+    SowID VARCHAR(50) NOT NULL PRIMARY KEY,
+    SowName VARCHAR(100) NOT NULL, 
+    ProjectType VARCHAR(50) NOT NULL, 
+    StartDate DATE NOT NULL,
+    EndDate DATE NOT NULL,
+    CssCMS VARCHAR(50),
+    ContractID VARCHAR(50),
+    ContractValue DECIMAL,
+    CrmStage VARCHAR(30),
+    CrmID VARCHAR(30),
+    TcsOwner INT,
+    BscOwner INT,
+    SowSS VARCHAR(30),
+    PoNumber INT,
+    PoValue DECIMAL,
+    Remarks VARCHAR(400),
+    FOREIGN KEY(TcsOwner) REFERENCES Employee(EmployeeID),
+    FOREIGN KEY(BscOwner) REFERENCES Employee(EmployeeID)
+);
+
+
 DROP TABLE IF EXISTS Resources;
 CREATE TABLE Resources (
     ResourceID SERIAL PRIMARY KEY,
-    EmployeeID VARCHAR(100) NOT NULL,
-    FullName VARCHAR(100) NOT NULL,
-    FOREIGN KEY(FullName) REFERENCES Employee(FullName),
+    EmployeeID INT NOT NULL,
     FOREIGN KEY(EmployeeID) REFERENCES Employee(EmployeeID)
 );
 
@@ -61,8 +61,8 @@ CREATE TABLE DropDown(
 DROP TABLE IF EXISTS BSCowner;
 CREATE TABLE BSCowner(
     ID SERIAL PRIMARY KEY,
-    FullName VARCHAR(100) NOT NULL,
-    FOREIGN KEY(FullName) REFERENCES Employee(FullName)
+    EmployeeID INT NOT NULL,
+    FOREIGN KEY(EmployeeID) REFERENCES Employee(EmployeeID)
 );
 
 /*

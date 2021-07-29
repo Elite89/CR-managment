@@ -19,7 +19,12 @@ app.use(express.json())
  */
 app.use(middleware.jsonErrorInBody)
 
+const validation = require('./utilities').validation 
+let isStringProvided = validation.isStringProvided
 
+app.use('/hello', require('./routes/hello.js')) 
+
+app.use('/contracts', require('./routes/contract.js'))
 
 
 /*

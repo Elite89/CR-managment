@@ -1,9 +1,9 @@
 {
-    "name": "TCSS 450 Lab Web Service",
+    "name": "Contract Management tool",
     "version": "0.1.0",
-    "description": "The TCSS 450 Lab Web Service API Documentation",
-    "title": "Lab API Doc",
-    "url" : "https://cfb3-lab4-backend-2020sp.herokuapp.com",
+    "description": "API Documentation",
+    "title": "API Doc",
+    "url" : "",
     "order": [
       "Hello",
       "Params",
