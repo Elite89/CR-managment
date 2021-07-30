@@ -26,6 +26,9 @@ app.use('/hello', require('./routes/hello.js'))
 
 app.use('/contracts', require('./routes/contract.js'))
 
+app.use('/employees', require('./routes/employee.js'))
+
+app.use('/resources', require('./routes/resources.js'))
 
 /*
  * Return HTML for the / end point. 
