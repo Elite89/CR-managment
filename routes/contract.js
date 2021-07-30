@@ -8,6 +8,49 @@ var router = express.Router()
 const validation = require('../utilities').validation
 let isStringProvided = validation.isStringProvided
 
+//postgres stores date in yyyy-mm-dd format and we passed in mm-dd-yyyy format
+
+//date should be in yyyy-mm-dd format
+//get all contracts that are about to expired before the passed date
+router.get("/expires/:date?", (request, response, next)=>{
+
+    console.log("here");
+    console.log(request.query);
+
+    //validate the header parameters
+    if(request.query.date == undefined){
+        response.status(400).send({
+            message:"Missing required information"
+        })
+    }
+    else{
+        next();
+    }
+}, (request, response)=>{
+
+    console.log("date : " + request.query.date);
+
+    let query = 'SELECT * FROM CONTRACTS WHERE $1::date-ENDDATE>=0';
+    let value = [request.query.date];
+
+    pool.query(query, value)
+    .then(result =>{
+
+        response.status(200).send({
+            'total':result.rowCount,
+            'rows':result.rows
+        })
+
+    })
+    .catch(error=>{
+        response.status(400).send({
+            message:'SQL error',
+            error: error
+        })
+    })
+});
+
+
 // get method to get details of the contract
 router.get("/:sowID?", (request, response, next)=>{
 
@@ -69,7 +112,9 @@ router.get("/:sowID?", (request, response, next)=>{
         console.log(error);
     })
 
-})
+});
+
+
 
 // "return" the router
 module.exports = router
