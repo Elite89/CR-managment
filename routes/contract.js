@@ -114,7 +114,46 @@ router.get("/:sowID?", (request, response, next)=>{
 
 });
 
+//post route
+router.post("/", (request, response, next)=>{
 
+    console.log("in post event");
+
+    //validate body elements
+    if(!request.body.SowID && !request.body.SowName && !request.body.ProjectType
+         && !request.body.StartDate && !request.body.EndDate){
+             response.status(400).send({
+                 message:"Missing required information."
+             })
+    }
+    else{
+        next()
+    }
+}, (request, response)=>{
+
+    var insert =   `INSERT INTO Contracts (sowid, sowname, projecttype, startdate, enddate, csscms, contractid, contractvalue, crmstage, crmid, tcsowner, bscowner, sowss, ponumber, povalue, remarks)
+                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+                    ON CONFLICT (sowid) DO UPDATE SET
+                    sowname=$2, projecttype=$3, startdate=$4, enddate=$5, csscms=$6, contractid=$7, contractvalue=$8, crmstage=$9, crmid=$10, tcsowner=$11, bscowner=$12, sowss=$13, ponumber=$14, povalue=$15, remarks=$16
+                    RETURNING *`
+             
+    var values = [request.body.SowID, request.body.SowName, request.body.ProjectType, request.body.StartDate, request.body.EndDate, request.body.CssCMS, request.body.ContractID, request.body.ContractValue, request.body.CrmStage, 
+                    request.body.CrmID, request.body.TcsOwner, request.body.BscOwner, request.body.SowSS, request.body.PoNumber, request.body.PoValue, request.body.Remarks]
+
+    pool.query(insert, values)
+    .then(result => {
+        response.status(200).send({
+            success: true,
+            message:"inserted successfully"
+        })
+    })
+    .catch(err =>{
+        response.status(400).send({
+            message:'SQL error',
+            error: err
+        })
+    })
+})
 
 // "return" the router
 module.exports = router
