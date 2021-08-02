@@ -6,6 +6,42 @@ var router = express.Router();
 const validation = require('../utilities').validation;
 let isStringProvided = validation.isStringProvided;
 
+//get available resources after certain date
+router.get("/available/:date?", (request, response, next)=>{
+
+    // console.log(request.query);
+
+    //validate the header parameters
+    if(request.query.date == undefined){
+        response.status(400).send({
+            message:"Missing required information"
+        })
+    }
+    else{
+        next();
+    }
+}, (request, response) =>{
+
+    var query = 'SELECT * FROM RESOURCES WHERE $1::date - ENDDATE <= 0;'
+    var value = [request.query.date];
+
+    pool.query(query, value)
+    .then(result => {
+
+        response.status(200).send({
+            'total':result.rowCount,
+            'rows':result.rows
+        })
+
+    })
+    .catch(err =>{
+        response.status(400).send({
+            message:'SQL Error',
+            error: err
+        })
+    })
+})
+
 
 // get method to get details of the contract
 router.get("/:SowID?", (request, response, next)=>{
