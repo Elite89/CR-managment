@@ -42,6 +42,43 @@ router.get("/available/:date?", (request, response, next)=>{
     })
 })
 
+router.post("/", (request, response, next)=>{
+
+    //validate body parameter
+    if(request.body.SowID == undefined || request.body.EmployeeID == undefined){
+        response.status(400).send({
+            message:"Missing required information"
+        })
+    }
+    else{
+        next()
+    }
+}, (request, response)=>{
+
+    var insert = `INSERT INTO RESOURCES (sowid, employeeid, startdate, enddate, percentage, payrate)
+                  VALUES ($1, $2, $3, $4, $5, $6)`
+                //   ON CONFLICT (sowid, employeeid) DO UPDATE SET
+                //   startdate=$3, enddate=$4, percentage=$5, payrate=$6
+                //   RETURNING *`
+
+    var values = [request.body.SowID, request.body.EmployeeID, request.body.StartDate, request.body.EndDate, request.body.Percentage, request.body.PayRate]
+
+    pool.query(insert, values)
+    .then(result => {
+        response.status(200).send({
+            success: true,
+            message:'Inserted successfully'
+        })
+
+    })
+    .catch(err =>{
+        response.status(400).send({
+            message:'SQL Error',
+            error: err
+        })
+    })
+
+})
 
 // get method to get details of the contract
 router.get("/:SowID?", (request, response, next)=>{

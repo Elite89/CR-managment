@@ -8,6 +8,44 @@ var router = express.Router()
 const validation = require('../utilities').validation
 let isStringProvided = validation.isStringProvided
 
+//end point to search for projects details
+router.get("/search/:id?", (request, response, next) =>{
+
+    // console.log("in here " + request.query.id);
+
+    if(request.query.id == undefined){
+        response.status(400).send({
+            message:"Missing Required Information"
+        })
+    }
+    else{
+        next()
+    }
+}, (request, response) =>{
+
+    var select = 'SELECT sowid FROM CONTRACTS WHERE LOWER(sowid) LIKE LOWER($1)';
+    var value = ['%'+request.query.id+'%'];
+
+    pool.query(select, value)
+    .then(result => {
+
+        // console.log(result);
+
+        response.status(200).send({
+            'total':result.rowCount,
+            'rows':result.rows
+        })
+
+    })
+    .catch(err => {
+        response.status(400).send({
+            message:'SQL error',
+            error: err
+        })
+    })
+})
+
+
 //postgres stores date in yyyy-mm-dd format and we passed in mm-dd-yyyy format
 
 //date should be in yyyy-mm-dd format
@@ -154,6 +192,7 @@ router.post("/", (request, response, next)=>{
         })
     })
 })
+
 
 // "return" the router
 module.exports = router
