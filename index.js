@@ -3,6 +3,9 @@ const express = require('express')
 //Create a new instance of express
 const app = express()
 
+//allow 
+var cors = require('cors')
+
 //Access the connection to Heroku Database
 const pool = require('./utilities').pool
 
@@ -12,6 +15,7 @@ let middleware = require('./middleware')
  * This middleware function parses JASOn in the body of POST requests
  */
 app.use(express.json())
+app.use(cors())
 
 /*
  * This middleware function will respond to improperly formed JSON in 
