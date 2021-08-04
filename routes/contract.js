@@ -153,6 +153,42 @@ router.get("/:sowID?", (request, response, next)=>{
 });
 
 //post route
+/**
+ * @api {post} /contracts Request to add a contracts.
+ * @apiName PostContracts
+ * @apiGroup Contracts
+ * 
+ * @apiDescription Adds contract 
+ * 
+ * @apiBody {String} SowID the id of the contract
+ * @apiBody {String} SowName name of the contract 
+ * @apiBody {String} ProjectType type of the contract
+ * @apiBody {String} StartDate start date of the contract
+ * @apiBody {String} EndDate tentetive end date of the contract
+ * @apiBody {String} CssCMS current contract signature status of cms
+ * @apiBody {String} ContractID Current contract id
+ * @apiBody {Number} ContractValue total contract value in dollars
+ * @apiBody {String} CrmStage crm stage of the contract
+ * @apiBody {String} CrmID crm ID of the contract
+ * @apiBody {Number} TcsOwner employee id of tcs owner for this contract
+ * @apiBody {Number} BscOwner employee id of bsc owner for this contract
+ * @apiBody {String} SowSS of this contract
+ * @apiBody {Number} PoNumber of this contract
+ * @apiBody {Number} PoValue Project value of this contract
+ * @apiBody {String} Any important remarks (optional)
+ * 
+ *  
+ * @apiSuccess (Success 201) {boolean} success true when contract is added
+ * @apiSuccess (Success 201) {String} success Message when contract is added
+ * 
+ * @apiError (400: Unknown user) {String} message "unknown contact"
+ * 
+ * @apiError (400: Missing Parameters) {String} message "Missing required information"
+ * 
+ * @apiError (400: SQL Error) {String} message the reported SQL error details
+ *  
+ * @apiUse JSONError
+ */
 router.post("/", (request, response, next)=>{
 
     console.log("in post event");
