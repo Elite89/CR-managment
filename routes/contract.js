@@ -191,6 +191,8 @@ router.get("/:sowID?", (request, response, next)=>{
  */
 router.post("/", (request, response, next)=>{
 
+    console.log(request.body);
+
     console.log("in post event");
 
     //validate body elements

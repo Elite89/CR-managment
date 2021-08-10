@@ -55,29 +55,67 @@ router.post("/", (request, response, next)=>{
     }
 }, (request, response)=>{
 
-    var insert = `INSERT INTO RESOURCES (sowid, employeeid, startdate, enddate, percentage, payrate)
+    var check = `SELECT * FROM RESOURCES WHERE sowid=$1 AND employeeid=$2`;
+    var val = [request.body.SowID, request.body.EmployeeID];
+
+    pool.query(check, val)
+    .then(result => {
+        if(result.rowCount >= 1){
+
+            var update = `UPDATE RESOURCES SET startdate=$3, enddate=$4, percentage=$5, payrate=$6 WHERE sowid=$1 AND employeeid=$2`;
+            var values = [request.body.SowID, request.body.EmployeeID, request.body.StartDate, request.body.EndDate, request.body.Percentage, request.body.PayRate];
+
+            console.log('updated successfully');
+
+            pool.query(update, values)
+            .then(result => {
+                response.status(200).send({
+                    success: true,
+                    message:'updated successfully'
+                })
+
+            })
+            .catch(err =>{
+                response.status(400).send({
+                    message:'SQL Error',
+                    error: err
+                })
+            })
+        }
+        else{
+
+            var insert = `INSERT INTO RESOURCES (sowid, employeeid, startdate, enddate, percentage, payrate)
                   VALUES ($1, $2, $3, $4, $5, $6)`
                 //   ON CONFLICT (sowid, employeeid) DO UPDATE SET
                 //   startdate=$3, enddate=$4, percentage=$5, payrate=$6
                 //   RETURNING *`
 
-    var values = [request.body.SowID, request.body.EmployeeID, request.body.StartDate, request.body.EndDate, request.body.Percentage, request.body.PayRate]
+            var values = [request.body.SowID, request.body.EmployeeID, request.body.StartDate, request.body.EndDate, request.body.Percentage, request.body.PayRate]
 
-    pool.query(insert, values)
-    .then(result => {
-        response.status(200).send({
-            success: true,
-            message:'Inserted successfully'
-        })
+            pool.query(insert, values)
+            .then(result => {
+                response.status(200).send({
+                    success: true,
+                    message:'Inserted successfully'
+                })
 
+            })
+            .catch(err =>{
+                response.status(400).send({
+                    message:'SQL Error',
+                    error: err
+                })
+            })
+
+        }
     })
     .catch(err =>{
         response.status(400).send({
-            message:'SQL Error',
-            error: err
+            message:'SQL error',
+            error:err
         })
     })
-
+   
 })
 
 // get method to get details of the contract
