@@ -61,6 +61,7 @@ DROP TABLE IF EXISTS DropDown;
 CREATE TABLE DropDown(
     DropdownID SERIAL PRIMARY KEY,
     DropDownName VARCHAR(100) NOT NULL,
+    DropDownType VARCHAR(100) NOT NULL,
     Status INT DEFAULT 1
 );
 
