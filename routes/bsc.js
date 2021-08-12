@@ -6,6 +6,26 @@ var router = express.Router();
 const validation = require('../utilities').validation;
 let isStringProvided = validation.isStringProvided;
 
+router.get("/all", (request, response, next) => {
+
+    var get = `SELECT e.fullname, e.employeeid FROM BSCowner AS b INNER JOIN Employee AS e ON b.employeeid = e.employeeid;`
+    
+    pool.query(get)
+    .then(result => {
+
+        response.status(200).send({
+            total:result.rowCount,
+            rows:result.rows
+        })
+    })
+    .catch(err => {
+        response.status(400).send({
+            message:'SQL Error',
+            error: err
+        })
+    })
+})
+
 router.get("/search/:name?", (request, response, next) => {
 
     // console.log("here");
