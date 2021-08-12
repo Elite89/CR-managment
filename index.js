@@ -34,6 +34,8 @@ app.use('/employees', require('./routes/employee.js'))
 
 app.use('/resources', require('./routes/resources.js'))
 
+app.use('/bscowner', require('./routes/bsc.js'))
+
 /*
  * Return HTML for the / end point. 
  * This is a nice location to document your web service API
