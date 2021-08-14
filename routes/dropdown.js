@@ -10,10 +10,12 @@ router.get("/all/", (request, response) => {
 
     // console.log("request to get all");
 
-    var select = 'SELECT DropDownName FROM dropdown;'
+    var select = 'SELECT dropdowntype FROM dropdown;'
 
     pool.query(select)
     .then(result => {
+
+        console.log(result.rows);
 
         response.status(200).send({
             'total':result.rowCount,
@@ -74,15 +76,18 @@ router.get("/:type?", (request, response, next) => {
     }
 }, (request, response) => {
 
-    var select = 'SELECT DropDownName FROM dropdown WHERE dropdowntype=$1;'
+    var select = 'SELECT * FROM dropdown WHERE dropdowntype=$1;'
     var val = [request.query.type]
 
     pool.query(select, val)
     .then(result => {
 
+        // console.log("** " + request.query.type);
+        // console.log(result.rows);
+
         response.status(200).send({
-            'total':result.rowCount,
-            'rows':result.rows
+            total:result.rowCount,
+            rows:result.rows
         })
 
     })
